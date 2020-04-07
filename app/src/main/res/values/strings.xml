@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ex1</string>
+    <string name="button_text">Create</string>
     <string name="initial_input_string">""</string>
-    <string name="initial_text_view__string">"Type below and press CREATE!"</string>
+    <string name="empt_toodo_message">"you can't create an empty todo"</string>
+
 </resources>
