@@ -22,8 +22,9 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -31,9 +32,12 @@
         android:id="@+id/todo_item_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="no todo yet"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/no_todo"
+        android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

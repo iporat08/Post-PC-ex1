@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">ex1</string>
+    <string name="app_name">TodoBoom</string>
     <string name="button_text">Create</string>
     <string name="initial_input_string">""</string>
-    <string name="empt_toodo_message">"you can't create an empty todo"</string>
+    <string name="no_todo">"No todod message yet"</string>
+    <string name="empty_todo_message">"You can't create an empty todo!"</string>
+    <string name="done_message">"TODO" userMessage "is now DONE. BOOM!"</string>
 
 
 </resources>

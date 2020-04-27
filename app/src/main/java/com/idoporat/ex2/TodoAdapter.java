@@ -4,47 +4,69 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter class
+ */
 public class TodoAdapter extends RecyclerView.Adapter {
 
+    ///////////////////////////////////// data members /////////////////////////////////////////////
+    /** An arrayList of TodoItems, holds the tasks to be done (and those who were already done)**/
     private ArrayList<TodoItem> todoList;
+
+    /** An instance of a class that implements the TodoClickListener interface, in order for the
+     *  adapter to pass information to the MainActivity**/
     private TodoClickListener todoClickListener;
 
-    public TodoAdapter(ArrayList<TodoItem> todoList){
+    ///////////////////////////////////// constructors /////////////////////////////////////////////
+    /**
+     * Constructor
+     * @param todoList An arrayList of TodoItems, holds the tasks to be done (and those already done)
+     */
+    TodoAdapter(ArrayList<TodoItem> todoList){
         this.todoList = todoList;
     }
 
-    public void setTodoItems(ArrayList<TodoItem> todoList){
-//        this.todoList.clear(); // todo might be needed?
+    ///////////////////////////////////// setters //////////////////////////////////////////////////
+    /**
+     * Sets the TodoAdapter's todoList field to be the input parameter todoList
+     * @param todoList An arrayList of TodoItems, holds the tasks to be done (and those already done)
+     */
+    void setTodoItems(ArrayList<TodoItem> todoList){
         this.todoList = todoList;
         notifyDataSetChanged();
     }
 
-    public void setTodoClickListener(TodoClickListener t){
+    /**
+     * Sets the TodoAdapter's todoClickListener field to be the input parameter t.
+     * @param t - An instance of a class that implements the TodoClickListener interface.
+     */
+    void setTodoClickListener(TodoClickListener t){
         this.todoClickListener = t;
     }
 
+    /////////////////////////// RecyclerView.Adapter related methods ///////////////////////////////
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final Context context = parent.getContext();
-        final View view = LayoutInflater.from(context).inflate(R.layout.todo_item, parent, false); //TODO understand
+        final View view = LayoutInflater.from(context)
+                        .inflate(R.layout.todo_item, parent, false); //TODO understand
         return new TodoItemHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) { //TODO this is a place to check if item is done or not yet
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         final TodoItemHolder h = (TodoItemHolder) holder; //TODO needed?
         final TodoItem todoItem= todoList.get(position);
 
-        h.getTodoMessage().setText(todoItem.getTodoMessage());
+        h.getTodoMessage().setText(todoItem.getDescription());
         if(todoItem.isDone()){
             h.deleteText();
         }
@@ -54,7 +76,6 @@ public class TodoAdapter extends RecyclerView.Adapter {
                 if(todoClickListener != null){
                     todoClickListener.onTodoClick(todoItem);
                 }
-
             }
         });
     }

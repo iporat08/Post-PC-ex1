@@ -6,18 +6,44 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class TodoItemHolder extends RecyclerView.ViewHolder{
-    final private TextView todo_message;
-    public TodoItemHolder(View v){
+/**
+ * A class representing a task to be done
+ */
+class TodoItemHolder extends RecyclerView.ViewHolder {
+    ///////////////////////////////////// data members /////////////////////////////////////////////
+    /**
+     * A String describing the task to be done.
+     **/
+    final private TextView todoMessage;
+
+    ///////////////////////////////////// constructors /////////////////////////////////////////////
+
+    /**
+     * Constructor
+     *
+     * @param v - a view to be held by the TodoItemHolder
+     */
+    TodoItemHolder(View v) {
         super(v);
-        todo_message = v.findViewById(R.id.todo_item_text);
+        todoMessage = v.findViewById(R.id.todo_item_text);
     }
 
-    public TextView getTodoMessage() {
-        return todo_message;
+    ///////////////////////////////////// getters //////////////////////////////////////////////////
+
+    /**
+     * @return the todoMessage of the holder (and the TodoItem)
+     */
+    TextView getTodoMessage() {
+        return todoMessage;
     }
 
-    public void deleteText() {
-        todo_message.setPaintFlags(todo_message.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+    ///////////////////////////////////// setters //////////////////////////////////////////////////
+
+    /**
+     * Marks the todoItem as done by marking its' text as strikethrough.
+     */
+    void deleteText() {
+        todoMessage.setPaintFlags(todoMessage.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 }
+

@@ -9,18 +9,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    static String inputMessage;
+    /** The message in the EditText **/
+    private String inputMessage;
     private EditText inputEditor;
     private ArrayList<TodoItem> todoList = new ArrayList<TodoItem>();
-    final private TodoAdapter adapter = new TodoAdapter(todoList);
-
-    final private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+    private TodoAdapter adapter = new TodoAdapter(todoList);
+    private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(inputEditor.getText().toString().equals("")){
                     int duration =  Snackbar.LENGTH_SHORT;
-                    String empty_todo_message = getString(R.string.empt_toodo_message);
-                    Snackbar.make(createButton, empty_todo_message, duration).show();
+                    String emptyTodoMessage = getString(R.string.empty_todo_message);
+                    Snackbar.make(createButton, emptyTodoMessage, duration).show();
                 }
                 else{
                     todoList.add(new TodoItem(inputEditor.getText().toString()));
@@ -59,11 +60,15 @@ public class MainActivity extends AppCompatActivity {
         adapter.setTodoClickListener(new TodoClickListener() {
             @Override
             public void onTodoClick(TodoItem t) {
+                if(!t.isDone()) {
+                    int duration =  Snackbar.LENGTH_SHORT;
+                    String done_message = getString(R.string.done_message)
+                            .replace("userMessage", t.getDescription());
+                    Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show();
+
+                }
                 t.setIsDone();
-                int duration =  Snackbar.LENGTH_SHORT;
-                String empty_todo_message = "TODO" + t.getTodoMessage() + "is now DONE. BOOM!";
-                Snackbar.make(findViewById(R.id.constraintLayout), empty_todo_message, duration).show();
-                adapter.setTodoItems(todoList); //todo needed?
+                adapter.setTodoItems(todoList);
             }
         });
     }
@@ -78,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        savedInstanceState.getString("inputMessage");
+        inputMessage = savedInstanceState.getString("inputMessage");
         todoList = savedInstanceState.getParcelableArrayList("todoList");
         adapter.setTodoItems(todoList);
     }
