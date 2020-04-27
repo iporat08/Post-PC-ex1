@@ -1,4 +1,4 @@
-package com.idoporat.ex1;
+package com.idoporat.ex2;
 
 import android.content.Context;
 
