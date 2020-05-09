@@ -1,4 +1,4 @@
-package com.idoporat.ex2;
+package com.idoporat.ex3;
 
 import android.content.Context;
 import android.view.LayoutInflater;

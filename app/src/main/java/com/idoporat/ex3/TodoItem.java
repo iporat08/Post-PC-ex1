@@ -1,9 +1,8 @@
-package com.idoporat.ex2;
+package com.idoporat.ex3;
 
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.ImageView;
 
 import androidx.annotation.RequiresApi;
 

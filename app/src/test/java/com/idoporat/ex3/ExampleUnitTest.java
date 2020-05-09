@@ -1,4 +1,4 @@
-package com.idoporat.ex2;
+package com.idoporat.ex3;
 
 import org.junit.Test;
 

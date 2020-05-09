@@ -1,4 +1,4 @@
-package com.idoporat.ex2;
+package com.idoporat.ex3;
 
 /**
  * An interface whose purpose's to enable the adapter to pass information about events to th
