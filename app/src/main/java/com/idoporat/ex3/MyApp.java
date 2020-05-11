@@ -10,7 +10,15 @@ public class MyApp extends Application {
         super.onCreate();
 
         todoManager = new TodoItemsManager(this);
-        int len = todoManager.
-        android.util.Log.d("MyApp", "Current size of TODOs list:" + len)
+        int len = todoManager.getTodoList().size();
+        android.util.Log.i("MyApp", "Current size of TODOs list: " + len); // todo - maybe  android.util.Log.i
+    }
+
+    public void addTodoItem(TodoItem t){
+        todoManager.addTodoItem(t, this);
+    }
+
+    public void removeTodoItem(TodoItem t){
+        todoManager.removeTodoItem(t, this);
     }
 }

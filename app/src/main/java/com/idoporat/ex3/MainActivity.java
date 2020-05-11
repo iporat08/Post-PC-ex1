@@ -1,10 +1,13 @@
 package com.idoporat.ex3;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,18 +24,21 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<TodoItem> todoList = new ArrayList<TodoItem>();
     private TodoAdapter adapter = new TodoAdapter(todoList);
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+//    private final MyApp app =  (MyApp) getApplicationContext();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final MyApp app = (MyApp) getApplicationContext();
+        todoList = app.todoManager.getTodoList();
+
         adapter.setTodoItems(todoList);
 
         RecyclerView todoRecycler = findViewById(R.id.todo_recycler);
         todoRecycler.setAdapter(adapter);
         todoRecycler.setLayoutManager(layoutManager);
-
 
         final Button createButton = (Button)findViewById(R.id.createButton);
         inputMessage = getString(R.string.initial_input_string);
@@ -48,10 +54,12 @@ public class MainActivity extends AppCompatActivity {
                     Snackbar.make(createButton, emptyTodoMessage, duration).show();
                 }
                 else{
-                    todoList.add(new TodoItem(inputEditor.getText().toString()));
+                    TodoItem itemToAdd = new TodoItem(inputEditor.getText().toString());
+//                    todoList.add(itemToAdd);
                     adapter.setTodoItems(todoList);
                     inputEditor.setText(getString(R.string.initial_input_string));
                     inputMessage = getString(R.string.initial_input_string);
+                    app.addTodoItem(itemToAdd);
                 }
             }
         });
@@ -64,10 +72,34 @@ public class MainActivity extends AppCompatActivity {
                     String done_message = getString(R.string.done_message)
                             .replace("userMessage", t.getDescription());
                     Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show();
-
+                    t.setIsDone(); //todo mark as DONE or delete completely?
+                    adapter.setTodoItems(todoList);
                 }
-                t.setIsDone();
-                adapter.setTodoItems(todoList);
+            }
+
+            @Override
+            public void onTodoLongClick(TodoItem t) {
+                    final TodoItem tTag = t;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setMessage("Are You Sure to delete?")
+                            .setCancelable(false)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    app.removeTodoItem(tTag);
+                                    todoList.remove(tTag);
+                                    adapter.setTodoItems(todoList);
+                                }
+                            })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+//                    alert.setTitle();
+                alert.show();
             }
         });
     }

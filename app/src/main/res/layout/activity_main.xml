@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
+    android:background="@drawable/background3"
     tools:context=".MainActivity">
 
     <RelativeLayout
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="#55342A">
+            android:background="#CCE4AF">
 
             <EditText
                 android:id="@+id/textInput"
@@ -33,7 +33,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:text="@string/initial_input_string"
-                android:textColor="#ECE4E4" />
+                android:textColor="#4F5FBA" />
 
             <Button
                 android:id="@+id/createButton"

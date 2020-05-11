@@ -66,16 +66,35 @@ public class TodoAdapter extends RecyclerView.Adapter {
         final TodoItemHolder h = (TodoItemHolder) holder; //TODO needed?
         final TodoItem todoItem= todoList.get(position);
 
+        if(todoItem.isDone()){
+            h.deleteText();
+        }
+        else{
+            h.unDeleteText();
+        }
+
         h.getTodoMessage().setText(todoItem.getDescription());
         if(todoItem.isDone()){
             h.deleteText();
         }
 
         h.itemView.setOnClickListener(new View.OnClickListener(){
+            @Override
             public void onClick(View v){
                 if(todoClickListener != null){
                     todoClickListener.onTodoClick(todoItem);
                 }
+            }
+        });
+
+        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){ // todo !!!!!!!!!
+            @Override
+            public boolean onLongClick(View v) {
+                if(todoClickListener != null){
+                    todoClickListener.onTodoLongClick(todoItem);
+                    return true;
+                }
+                return false; // todo
             }
         });
     }

@@ -45,5 +45,9 @@ class TodoItemHolder extends RecyclerView.ViewHolder {
     void deleteText() {
         todoMessage.setPaintFlags(todoMessage.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
+
+    void unDeleteText(){
+        todoMessage.setPaintFlags(todoMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+    }
 }
 

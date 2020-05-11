@@ -11,15 +11,37 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoItemsManager {
-    public ArrayList<TodoItem> todoList;
+class TodoItemsManager {
+    private ArrayList<TodoItem> todoList;
     private static final String SP_TODO_LIST = "todoList";
+    private Gson gson;
+    private SharedPreferences sp;
 
-    public TodoItemsManager(Context context){
-        Gson gson = new Gson();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+    TodoItemsManager(Context context){
+        gson = new Gson();
+        sp = PreferenceManager.getDefaultSharedPreferences(context);
         String json = sp.getString(SP_TODO_LIST, "");
         Type type = new TypeToken<List<TodoItem>>(){}.getType();
-        todoList = gson.fromJson(json, type);
+        todoList = gson.fromJson(json, type);// todo what happens when list's empty
+    }
+
+    ArrayList<TodoItem> getTodoList(){
+        return todoList;
+    }
+
+    void addTodoItem(TodoItem t, Context context){
+        todoList.add(t);
+        updateSP();
+    }
+
+    void removeTodoItem(TodoItem t, Context context){
+        todoList.remove(t);
+        updateSP();
+    }
+
+    private void updateSP(){
+        SharedPreferences.Editor editor = sp.edit();
+        String json = gson.toJson(todoList);
+        editor.putString(SP_TODO_LIST, json).apply();
     }
 }
