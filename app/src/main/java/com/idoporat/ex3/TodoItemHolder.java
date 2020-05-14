@@ -46,6 +46,9 @@ class TodoItemHolder extends RecyclerView.ViewHolder {
         todoMessage.setPaintFlags(todoMessage.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
+    /**
+     * Marks the todoItem as undone by not marking its' text as strikethrough.
+     */
     void unDeleteText(){
         todoMessage.setPaintFlags(todoMessage.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
     }

@@ -26,12 +26,12 @@ public class TodoItem implements Parcelable {
 
     /**
      * A constructor from Parcel
-     * @param source a Parcel to be reconstructed //TODO
+     * @param source a Parcel to be reconstructed
      */
-    @RequiresApi(api = Build.VERSION_CODES.Q) //todo - is this ok..?
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private TodoItem(Parcel source){
         this.description = source.readString();
-        isDone = source.readBoolean(); //todo int?
+        isDone = source.readBoolean();
     }
 
     //////////////////////////////// Parcelable interface methods //////////////////////////////////
@@ -40,18 +40,18 @@ public class TodoItem implements Parcelable {
         return 0;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.Q) //todo ok..?
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(description);
-        dest.writeBoolean(isDone); //todo maybe int?
+        dest.writeBoolean(isDone);
     }
 
     public static final Parcelable.Creator<TodoItem> CREATOR = new Parcelable.Creator<TodoItem>(){
-        @RequiresApi(api = Build.VERSION_CODES.Q) //todo ok..?
+        @RequiresApi(api = Build.VERSION_CODES.Q)
         @Override
         public TodoItem createFromParcel(Parcel source) {
-            return new TodoItem(source); // todo - maybe int?
+            return new TodoItem(source);
         }
 
         @Override
@@ -82,8 +82,7 @@ public class TodoItem implements Parcelable {
     void setIsDone(){
         isDone = true;
     }
-
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 }
 
 

@@ -11,37 +11,79 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class that holds and manages a todoList for the app.
+ */
 class TodoItemsManager {
+    //////////////////////////////////////// data members //////////////////////////////////////////
+    /** A list of TodoItems **/
     private ArrayList<TodoItem> todoList;
-    private static final String SP_TODO_LIST = "todoList";
-    private Gson gson;
-    private SharedPreferences sp;
 
+    /** The key of the json of the todoList **/
+    private static final String SP_TODO_LIST = "todoList";
+
+    /** A Gson object of the class **/
+    private static Gson gson;
+
+    /** A SharedPreferences object of the class **/
+    private static SharedPreferences sp;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * A constructor
+     * @param context the context of the instance.
+     */
     TodoItemsManager(Context context){
         gson = new Gson();
         sp = PreferenceManager.getDefaultSharedPreferences(context);
         String json = sp.getString(SP_TODO_LIST, "");
         Type type = new TypeToken<List<TodoItem>>(){}.getType();
-        todoList = gson.fromJson(json, type);// todo what happens when list's empty
+        todoList = gson.fromJson(json, type);
     }
 
-    ArrayList<TodoItem> getTodoList(){
-        return todoList;
-    }
-
-    void addTodoItem(TodoItem t, Context context){
-        todoList.add(t);
-        updateSP();
-    }
-
-    void removeTodoItem(TodoItem t, Context context){
-        todoList.remove(t);
-        updateSP();
-    }
-
+    /**
+     * Updates the SP with the TodoManager's data.
+     */
     private void updateSP(){
         SharedPreferences.Editor editor = sp.edit();
         String json = gson.toJson(todoList);
         editor.putString(SP_TODO_LIST, json).apply();
     }
+
+    //////////////////////////////////////// getters ///////////////////////////////////////////////
+
+    /** returns the todoList **/
+    ArrayList<TodoItem> getTodoList(){
+        return todoList;
+    }
+
+    //////////////////////////////////////// setters ///////////////////////////////////////////////
+
+    /**
+     * Adds a TodoItem to the todoList.
+     * @param t the TodoItem to be added.
+     */
+    void addTodoItem(TodoItem t){
+        todoList.add(t);
+        updateSP();
+    }
+
+    /**
+     * Removes a TodoItem to the todoList.
+     * @param t the TodoItem to be removed.
+     */
+    void removeTodoItem(TodoItem t){
+        todoList.remove(t);
+        updateSP();
+    }
+
+    /**
+     * Replaces todoList with a new todoList.
+     * @param list the new todoList.
+     */
+    void updateTodoList(ArrayList<TodoItem> list){
+        todoList = list;
+        updateSP();
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 }

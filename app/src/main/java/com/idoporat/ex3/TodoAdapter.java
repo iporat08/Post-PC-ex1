@@ -56,14 +56,14 @@ public class TodoAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final Context context = parent.getContext();
         final View view = LayoutInflater.from(context)
-                        .inflate(R.layout.todo_item, parent, false); //TODO understand
+                        .inflate(R.layout.todo_item, parent, false);
         return new TodoItemHolder(view);
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        final TodoItemHolder h = (TodoItemHolder) holder; //TODO needed?
+        final TodoItemHolder h = (TodoItemHolder) holder;
         final TodoItem todoItem= todoList.get(position);
 
         if(todoItem.isDone()){
@@ -72,11 +72,7 @@ public class TodoAdapter extends RecyclerView.Adapter {
         else{
             h.unDeleteText();
         }
-
         h.getTodoMessage().setText(todoItem.getDescription());
-        if(todoItem.isDone()){
-            h.deleteText();
-        }
 
         h.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -87,14 +83,14 @@ public class TodoAdapter extends RecyclerView.Adapter {
             }
         });
 
-        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){ // todo !!!!!!!!!
+        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View v) {
                 if(todoClickListener != null){
                     todoClickListener.onTodoLongClick(todoItem);
                     return true;
                 }
-                return false; // todo
+                return false;
             }
         });
     }
@@ -103,4 +99,5 @@ public class TodoAdapter extends RecyclerView.Adapter {
     public int getItemCount() {
         return todoList.size();
     }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 }

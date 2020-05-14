@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,88 +21,103 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     /** The message in the EditText **/
     private String inputMessage;
+
+    /** The MainActivity's EditText into which new TodoItem's messages will be written**/
     private EditText inputEditor;
+
+    /** A list of TodoItems **/
     private ArrayList<TodoItem> todoList = new ArrayList<TodoItem>();
+
+    /** The MainActivity's Adapter **/
     private TodoAdapter adapter = new TodoAdapter(todoList);
+
+    /** The MainActivity's LayoutManager **/
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-//    private final MyApp app =  (MyApp) getApplicationContext();
+
+    /** The Application running this activity **/
+    private MyApp app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final MyApp app = (MyApp) getApplicationContext();
+        app = (MyApp) getApplicationContext();
         todoList = app.todoManager.getTodoList();
-
         adapter.setTodoItems(todoList);
-
         RecyclerView todoRecycler = findViewById(R.id.todo_recycler);
         todoRecycler.setAdapter(adapter);
         todoRecycler.setLayoutManager(layoutManager);
-
         final Button createButton = (Button)findViewById(R.id.createButton);
         inputMessage = getString(R.string.initial_input_string);
         inputEditor = (EditText)findViewById(R.id.textInput);
         inputEditor.setText(inputMessage);
+        createButton.setOnClickListener(new ButtonListener());
+        adapter.setTodoClickListener(new TodoClickListener());
+    }
 
-        createButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                if(inputEditor.getText().toString().equals("")){
-                    int duration =  Snackbar.LENGTH_SHORT;
-                    String emptyTodoMessage = getString(R.string.empty_todo_message);
-                    Snackbar.make(createButton, emptyTodoMessage, duration).show();
-                }
-                else{
-                    TodoItem itemToAdd = new TodoItem(inputEditor.getText().toString());
-//                    todoList.add(itemToAdd);
-                    adapter.setTodoItems(todoList);
-                    inputEditor.setText(getString(R.string.initial_input_string));
-                    inputMessage = getString(R.string.initial_input_string);
-                    app.addTodoItem(itemToAdd);
-                }
+    /**
+     * A class implementing an interface whose purpose is to enable the adapter pass information to
+     * the MainActivity
+     */
+    class TodoClickListener implements com.idoporat.ex3.TodoClickListener {
+        @Override
+        public void onTodoClick(TodoItem t) {
+            if (!t.isDone()) {
+                int duration = Snackbar.LENGTH_SHORT;
+                String done_message = getString(R.string.done_message)
+                        .replace("userMessage", t.getDescription());
+                Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show();
+                t.setIsDone();
+                adapter.setTodoItems(todoList);
+                app.updateTodoList(todoList);
             }
-        });
+        }
 
-        adapter.setTodoClickListener(new TodoClickListener() {
-            @Override
-            public void onTodoClick(TodoItem t) {
-                if(!t.isDone()) {
-                    int duration =  Snackbar.LENGTH_SHORT;
-                    String done_message = getString(R.string.done_message)
-                            .replace("userMessage", t.getDescription());
-                    Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show();
-                    t.setIsDone(); //todo mark as DONE or delete completely?
-                    adapter.setTodoItems(todoList);
-                }
-            }
-
-            @Override
-            public void onTodoLongClick(TodoItem t) {
-                    final TodoItem tTag = t;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage("Are You Sure to delete?")
-                            .setCancelable(false)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener(){
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    app.removeTodoItem(tTag);
-                                    todoList.remove(tTag);
-                                    adapter.setTodoItems(todoList);
-                                }
-                            })
+        @Override
+        public void onTodoLongClick(TodoItem t) {
+            final TodoItem tTag = t;
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setMessage("Are You Sure to delete?")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            app.removeTodoItem(tTag);
+                            todoList.remove(tTag);
+                            adapter.setTodoItems(todoList);
+                        }
+                    })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             return;
                         }
                     });
-                    AlertDialog alert = builder.create();
-//                    alert.setTitle();
-                alert.show();
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
+    }
+
+    /**
+     * A listener for the create button.
+     */
+    class ButtonListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            if(inputEditor.getText().toString().equals("")){
+                int duration =  Snackbar.LENGTH_SHORT;
+                String emptyTodoMessage = getString(R.string.empty_todo_message);
+                Snackbar.make(v, emptyTodoMessage, duration).show();
             }
-        });
+            else{
+                TodoItem itemToAdd = new TodoItem(inputEditor.getText().toString());
+                adapter.setTodoItems(todoList);
+                inputEditor.setText(getString(R.string.initial_input_string));
+                inputMessage = getString(R.string.initial_input_string);
+                app.addTodoItem(itemToAdd);
+            }
+        }
     }
 
     @Override
