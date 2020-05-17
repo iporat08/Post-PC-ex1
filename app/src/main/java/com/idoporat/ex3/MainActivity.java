@@ -37,6 +37,13 @@ public class MainActivity extends AppCompatActivity {
     /** The Application running this activity **/
     private MyApp app;
 
+    /** In case a TodoItem was long-clicked and the device was rotated, we'll store the lonclicked
+     * item in order to restore the dialog box **/
+    TodoItem wasLongClicked = null;
+
+    /** true if a dialog box is shown, false otherwise **/
+    boolean dialogOn = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,26 +83,40 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTodoLongClick(TodoItem t) {
-            final TodoItem tTag = t;
-            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-            builder.setMessage("Are You Sure to delete?")
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            app.removeTodoItem(tTag);
-                            todoList.remove(tTag);
-                            adapter.setTodoItems(todoList);
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            return;
-                        }
-                    });
-            AlertDialog alert = builder.create();
+            AlertDialog alert = createTodoDialog(t);
+            dialogOn = true;
             alert.show();
         }
+    }
+
+    /**
+     * Creates a dialog box ( an AlertDialog ) for when a TodoItem is long-clicked.
+     * @param t the long-clicked TodoItem.
+     * @return the AlertDialog
+     */
+    private AlertDialog createTodoDialog(TodoItem t){
+        wasLongClicked = t;
+        final TodoItem tTag = t;
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Are You Sure to delete?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        app.removeTodoItem(tTag);
+                        todoList.remove(tTag);
+                        adapter.setTodoItems(todoList);
+                        wasLongClicked = null;
+                        dialogOn = false;
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        wasLongClicked = null;
+                        dialogOn = false;
+                    }
+                });
+        return builder.create();
     }
 
     /**
@@ -125,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString("inputMessage", inputMessage);
         outState.putParcelableArrayList("todoList", todoList);
+
+        //
+        outState.putBoolean("dialogOn", dialogOn);
+        outState.putParcelable("wasLongClicked", wasLongClicked);
     }
 
     @Override
@@ -133,5 +158,13 @@ public class MainActivity extends AppCompatActivity {
         inputMessage = savedInstanceState.getString("inputMessage");
         todoList = savedInstanceState.getParcelableArrayList("todoList");
         adapter.setTodoItems(todoList);
+
+        // restoring a dialog box, if one is presented on screen:
+        dialogOn = savedInstanceState.getBoolean("dialogOn");
+        wasLongClicked = savedInstanceState.getParcelable("wasLongClicked");
+        if(dialogOn){
+            AlertDialog alert = createTodoDialog(wasLongClicked);
+            alert.show();
+        }
     }
 }
