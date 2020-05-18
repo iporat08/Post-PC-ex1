@@ -83,7 +83,7 @@ public class TodoAdapter extends RecyclerView.Adapter {
             }
         });
 
-        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){ // todo delete
             @Override
             public boolean onLongClick(View v) {
                 if(todoClickListener != null){

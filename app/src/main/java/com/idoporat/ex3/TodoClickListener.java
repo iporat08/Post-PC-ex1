@@ -14,7 +14,7 @@ public interface TodoClickListener{
     /**
      * The method enabling the adapter to pass information to the MainActivity when a TodoItem is
      * being clicked.
-     * @param t a TodoBoom item which the user clicked.
+     * @param t a TodoBoom item which the user clicked. //todo delete
      */
     public void onTodoLongClick(TodoItem t);
 }

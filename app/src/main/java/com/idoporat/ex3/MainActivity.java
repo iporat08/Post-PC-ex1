@@ -6,9 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Application;
-import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -70,14 +69,27 @@ public class MainActivity extends AppCompatActivity {
     class TodoClickListener implements com.idoporat.ex3.TodoClickListener {
         @Override
         public void onTodoClick(TodoItem t) {
-            if (!t.isDone()) {
-                int duration = Snackbar.LENGTH_SHORT;
-                String done_message = getString(R.string.done_message)
-                        .replace("userMessage", t.getDescription());
-                Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show();
-                t.setIsDone();
+            if (t.isDone()) {
+
+            }
+            else{
+                Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
+                                                            NonCompletedTodoItemScreen.class); // todo
+                unfinishedTodoIntent.putExtra("id", t.getId());
+                startActivity(unfinishedTodoIntent);
+
+//                int duration = Snackbar.LENGTH_SHORT; //todo
+//                String done_message = getString(R.string.done_message)
+//                        .replace("userMessage", t.getDescription()); //todo
+//                Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show(); //todo
+//                t.setIsDone(); //todo
+//                adapter.setTodoItems(todoList); //todo
+
+                //todo - dose'nt update immediatley!!!!!!!!!!
+//                app.setTodoList(todoList);
+//                todoList = app.todoManager.getTodoList();
                 adapter.setTodoItems(todoList);
-                app.updateTodoList(todoList);
+
             }
         }
 

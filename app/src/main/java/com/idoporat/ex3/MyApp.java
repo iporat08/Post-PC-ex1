@@ -22,6 +22,10 @@ public class MyApp extends Application {
         int len = todoManager.getTodoList().size();
         android.util.Log.i("MyApp", SIZE_MESSAGE_PREFIX + len);
     }
+    //////////////////////////////////////// setters ///////////////////////////////////////////////
+    public TodoItem getTodoItem(int id){
+        return todoManager.getTodoItem(id);
+    }
 
     //////////////////////////////////////// setters ///////////////////////////////////////////////
 
@@ -45,8 +49,8 @@ public class MyApp extends Application {
      * Instructs the app's TodoManager instance to replace its' todoList with list.
      * @param list the new todoList.
      */
-    public void updateTodoList(ArrayList<TodoItem> list){
-        todoManager.updateTodoList(list);
+    public void setTodoList(ArrayList<TodoItem> list){
+        todoManager.setTodoList(list);
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }

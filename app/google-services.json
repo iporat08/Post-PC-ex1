@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "358705436864",
+    "firebase_url": "https://todoboom-a4ab4.firebaseio.com",
+    "project_id": "todoboom-a4ab4",
+    "storage_bucket": "todoboom-a4ab4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358705436864:android:9d64bea3e05dc1378eb525",
+        "android_client_info": {
+          "package_name": "com.idoporat.ex1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "358705436864-ht4pi6pn24qj59lfhpn1mcvoloof1qcs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk_qo0fiz2MXEsaNd4scOhIMjU2SPA_Z0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "358705436864-ht4pi6pn24qj59lfhpn1mcvoloof1qcs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -6,13 +6,26 @@ import android.os.Parcelable;
 
 import androidx.annotation.RequiresApi;
 
+import java.util.Date;
+import java.util.TreeSet;
+
 public class TodoItem implements Parcelable {
     ///////////////////////////////////// data members /////////////////////////////////////////////
     /** A String describing the task to be done. **/
-    final private String description;
+    private String description;
 
     /** A boolean value, marks whether or not the task of the todoItem is done. **/
     private boolean isDone;
+
+    private int id;
+
+    private Date creationTimestamp;
+
+    private Date editTimestamp;
+
+    private static int highestId = 0; //todo probably bad idea, should load from DB every time!!!
+
+    private static TreeSet<Integer> usedIds = new TreeSet<Integer>(); // todo might be too much and not here, probably bad idea, should load from DB every time!!
 
     ///////////////////////////////////// constructors /////////////////////////////////////////////
     /**
@@ -22,6 +35,16 @@ public class TodoItem implements Parcelable {
     TodoItem(String todoMessage){
         this.description = todoMessage;
         isDone = false;
+        creationTimestamp = new Date(System.currentTimeMillis());
+        editTimestamp = creationTimestamp;
+        if(usedIds.isEmpty()){
+//            id = highestId++; //todo
+            id = highestId + 1;
+            ++highestId;
+        }
+        else{
+            id = usedIds.pollFirst();
+        }
     }
 
     /**
@@ -75,12 +98,38 @@ public class TodoItem implements Parcelable {
         return isDone;
     }
 
+    /**
+     * returns the TodoItems' id
+     */
+    int getId(){
+        return id;
+    }
+
+    /**
+     * @return creationTimestamp
+     */
+    public Date getCreationTime(){
+        return creationTimestamp;
+    }
+
+    /**
+     * @return editTimestamp
+     */
+    public Date getEditTimestamp(){
+        return editTimestamp;
+    }
+
+
     ///////////////////////////////////// setters //////////////////////////////////////////////////
     /**
      * Sets the TodoItem's isDone field to true.
      */
     void setIsDone(){
         isDone = true;
+    }
+
+    void setDescription(String s){
+        description = s;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }

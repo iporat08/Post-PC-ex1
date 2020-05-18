@@ -9,6 +9,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -57,6 +60,15 @@ class TodoItemsManager {
         return todoList;
     }
 
+    TodoItem getTodoItem(int id){
+        for(TodoItem t : todoList){ //todo - temp, should change after firebase
+            if(t.getId() == id){
+                return t;
+            }
+        }
+        return null;
+    }
+
     //////////////////////////////////////// setters ///////////////////////////////////////////////
 
     /**
@@ -81,8 +93,15 @@ class TodoItemsManager {
      * Replaces todoList with a new todoList.
      * @param list the new todoList.
      */
-    void updateTodoList(ArrayList<TodoItem> list){
+    void setTodoList(ArrayList<TodoItem> list){
         todoList = list;
+        updateSP();
+    }
+
+    /**
+     * todo
+     */
+    void updateTodoList(){
         updateSP();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
