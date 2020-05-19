@@ -82,17 +82,6 @@ public class TodoAdapter extends RecyclerView.Adapter {
                 }
             }
         });
-
-        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){ // todo delete
-            @Override
-            public boolean onLongClick(View v) {
-                if(todoClickListener != null){
-                    todoClickListener.onTodoLongClick(todoItem);
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override

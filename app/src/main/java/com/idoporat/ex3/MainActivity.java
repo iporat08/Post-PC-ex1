@@ -36,12 +36,11 @@ public class MainActivity extends AppCompatActivity {
     /** The Application running this activity **/
     private MyApp app;
 
-    /** In case a TodoItem was long-clicked and the device was rotated, we'll store the lonclicked
-     * item in order to restore the dialog box **/
-    TodoItem wasLongClicked = null;
+    /** the id of a NonCompletedActivity's startActivityForResult call **/
+    final static int nonCompletedActivity = 1;
 
-    /** true if a dialog box is shown, false otherwise **/
-    boolean dialogOn = false;
+    /** the id of a CompletedActivity's startActivityForResult call **/
+    final static int completedActivity = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,65 +69,35 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onTodoClick(TodoItem t) {
             if (t.isDone()) {
-
+                Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
+                        CompletedTodoActivity.class); // todo
+                unfinishedTodoIntent.putExtra("id", t.getId());
+                startActivityForResult(unfinishedTodoIntent, completedActivity);
             }
             else{
                 Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
                                                             NonCompletedTodoItemScreen.class); // todo
                 unfinishedTodoIntent.putExtra("id", t.getId());
-                startActivity(unfinishedTodoIntent);
-
-//                int duration = Snackbar.LENGTH_SHORT; //todo
-//                String done_message = getString(R.string.done_message)
-//                        .replace("userMessage", t.getDescription()); //todo
-//                Snackbar.make(findViewById(R.id.todo_recycler), done_message, duration).show(); //todo
-//                t.setIsDone(); //todo
-//                adapter.setTodoItems(todoList); //todo
-
-                //todo - dose'nt update immediatley!!!!!!!!!!
-//                app.setTodoList(todoList);
-//                todoList = app.todoManager.getTodoList();
-                adapter.setTodoItems(todoList);
-
+                startActivityForResult(unfinishedTodoIntent, nonCompletedActivity);
             }
-        }
-
-        @Override
-        public void onTodoLongClick(TodoItem t) {
-            AlertDialog alert = createTodoDialog(t);
-            dialogOn = true;
-            alert.show();
         }
     }
 
-    /**
-     * Creates a dialog box ( an AlertDialog ) for when a TodoItem is long-clicked.
-     * @param t the long-clicked TodoItem.
-     * @return the AlertDialog
-     */
-    private AlertDialog createTodoDialog(TodoItem t){
-        wasLongClicked = t;
-        final TodoItem tTag = t;
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage("Are You Sure to delete?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        app.removeTodoItem(tTag);
-                        todoList.remove(tTag);
-                        adapter.setTodoItems(todoList);
-                        wasLongClicked = null;
-                        dialogOn = false;
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        wasLongClicked = null;
-                        dialogOn = false;
-                    }
-                });
-        return builder.create();
+    @Override
+    protected void onActivityResult(int requestedCode, int resultCode, Intent data){
+        super.onActivityResult(requestedCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            if(requestedCode == nonCompletedActivity){
+                adapter.notifyDataSetChanged();
+                int duration =  Snackbar.LENGTH_LONG; // todo needs to be in NonCompletedActivity!
+                Snackbar.make(findViewById(R.id.textInput),
+                        getString(R.string.description_changed), duration).show();
+            }
+            if (requestedCode == completedActivity){
+                adapter.notifyDataSetChanged();
+                //todo - add animation
+            }
+        }
     }
 
     /**
@@ -144,11 +113,10 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(v, emptyTodoMessage, duration).show();
             }
             else{
-                TodoItem itemToAdd = new TodoItem(inputEditor.getText().toString());
+                app.addTodoItem(inputEditor.getText().toString());
                 adapter.setTodoItems(todoList);
                 inputEditor.setText(getString(R.string.initial_input_string));
                 inputMessage = getString(R.string.initial_input_string);
-                app.addTodoItem(itemToAdd);
             }
         }
     }
@@ -158,10 +126,6 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString("inputMessage", inputMessage);
         outState.putParcelableArrayList("todoList", todoList);
-
-        //
-        outState.putBoolean("dialogOn", dialogOn);
-        outState.putParcelable("wasLongClicked", wasLongClicked);
     }
 
     @Override
@@ -170,13 +134,5 @@ public class MainActivity extends AppCompatActivity {
         inputMessage = savedInstanceState.getString("inputMessage");
         todoList = savedInstanceState.getParcelableArrayList("todoList");
         adapter.setTodoItems(todoList);
-
-        // restoring a dialog box, if one is presented on screen:
-        dialogOn = savedInstanceState.getBoolean("dialogOn");
-        wasLongClicked = savedInstanceState.getParcelable("wasLongClicked");
-        if(dialogOn){
-            AlertDialog alert = createTodoDialog(wasLongClicked);
-            alert.show();
-        }
     }
 }

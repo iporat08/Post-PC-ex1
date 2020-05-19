@@ -9,12 +9,6 @@ public interface TodoClickListener{
      * Constructor
      * @param t - a TodoItem object.
      */
-    public void onTodoClick(TodoItem t);
+    void onTodoClick(TodoItem t);
 
-    /**
-     * The method enabling the adapter to pass information to the MainActivity when a TodoItem is
-     * being clicked.
-     * @param t a TodoBoom item which the user clicked. //todo delete
-     */
-    public void onTodoLongClick(TodoItem t);
 }

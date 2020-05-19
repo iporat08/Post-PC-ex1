@@ -17,34 +17,26 @@ public class TodoItem implements Parcelable {
     /** A boolean value, marks whether or not the task of the todoItem is done. **/
     private boolean isDone;
 
+    /** a unique id **/
     private int id;
 
+    /** the creation time of the TodoItem **/
     private Date creationTimestamp;
 
+    /** the date in which this TodoItem was last edited **/
     private Date editTimestamp;
-
-    private static int highestId = 0; //todo probably bad idea, should load from DB every time!!!
-
-    private static TreeSet<Integer> usedIds = new TreeSet<Integer>(); // todo might be too much and not here, probably bad idea, should load from DB every time!!
 
     ///////////////////////////////////// constructors /////////////////////////////////////////////
     /**
      * Constructor
      * @param todoMessage A String describing the task to be done.
      */
-    TodoItem(String todoMessage){
+    TodoItem(String todoMessage, int id){
         this.description = todoMessage;
         isDone = false;
         creationTimestamp = new Date(System.currentTimeMillis());
         editTimestamp = creationTimestamp;
-        if(usedIds.isEmpty()){
-//            id = highestId++; //todo
-            id = highestId + 1;
-            ++highestId;
-        }
-        else{
-            id = usedIds.pollFirst();
-        }
+        this.id = id;
     }
 
     /**
@@ -55,6 +47,10 @@ public class TodoItem implements Parcelable {
     private TodoItem(Parcel source){
         this.description = source.readString();
         isDone = source.readBoolean();
+        id = source.readInt();
+        creationTimestamp = new Date(source.readLong());
+        editTimestamp = new Date(source.readLong());
+
     }
 
     //////////////////////////////// Parcelable interface methods //////////////////////////////////
@@ -68,6 +64,9 @@ public class TodoItem implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(description);
         dest.writeBoolean(isDone);
+        dest.writeInt(id);
+        dest.writeLong(creationTimestamp.getTime());
+        dest.writeLong(editTimestamp.getTime());
     }
 
     public static final Parcelable.Creator<TodoItem> CREATOR = new Parcelable.Creator<TodoItem>(){
@@ -108,14 +107,14 @@ public class TodoItem implements Parcelable {
     /**
      * @return creationTimestamp
      */
-    public Date getCreationTime(){
+    Date getCreationTime(){
         return creationTimestamp;
     }
 
     /**
      * @return editTimestamp
      */
-    public Date getEditTimestamp(){
+    Date getEditTimestamp(){
         return editTimestamp;
     }
 
@@ -124,12 +123,30 @@ public class TodoItem implements Parcelable {
     /**
      * Sets the TodoItem's isDone field to true.
      */
-    void setIsDone(){
+    void markAsDone(){
         isDone = true;
     }
 
+    /**
+     * Sets the TodoItem's isDone field to false.
+     */
+    void markUndone(){
+        isDone = false;
+    }
+
+    /**
+     * changes the description of this TodoItem
+     * @param s - the new description
+     */
     void setDescription(String s){
         description = s;
+    }
+
+    /**
+     * changes the editTimestamp to the current date and time.
+     */
+    void setEditTimestamp(){
+        editTimestamp = new Date(System.currentTimeMillis());
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }

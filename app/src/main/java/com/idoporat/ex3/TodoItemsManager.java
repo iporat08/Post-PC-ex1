@@ -9,9 +9,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -25,11 +22,17 @@ class TodoItemsManager {
     /** The key of the json of the todoList **/
     private static final String SP_TODO_LIST = "todoList";
 
+    /** todo **/
+    private static final String SP_HIGHEST_ID = "highestId";
+
     /** A Gson object of the class **/
     private static Gson gson;
 
     /** A SharedPreferences object of the class **/
     private static SharedPreferences sp;
+
+    /** the highest id of a TodoItem that was created**/
+    private int highestId;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -42,6 +45,7 @@ class TodoItemsManager {
         String json = sp.getString(SP_TODO_LIST, "");
         Type type = new TypeToken<List<TodoItem>>(){}.getType();
         todoList = gson.fromJson(json, type);
+        highestId = sp.getInt(SP_HIGHEST_ID, 0);
     }
 
     /**
@@ -50,7 +54,7 @@ class TodoItemsManager {
     private void updateSP(){
         SharedPreferences.Editor editor = sp.edit();
         String json = gson.toJson(todoList);
-        editor.putString(SP_TODO_LIST, json).apply();
+        editor.putString(SP_TODO_LIST, json).putInt(SP_HIGHEST_ID, highestId).apply();
     }
 
     //////////////////////////////////////// getters ///////////////////////////////////////////////
@@ -71,20 +75,24 @@ class TodoItemsManager {
 
     //////////////////////////////////////// setters ///////////////////////////////////////////////
 
+
     /**
      * Adds a TodoItem to the todoList.
-     * @param t the TodoItem to be added.
+     * @param description the TodoItems' description
      */
-    void addTodoItem(TodoItem t){
+    void addTodoItem(String description){//TodoItem t){
+        TodoItem t = new TodoItem(description, highestId);
+        ++highestId;
         todoList.add(t);
         updateSP();
     }
 
     /**
      * Removes a TodoItem to the todoList.
-     * @param t the TodoItem to be removed.
+     * @param id the id of the TodoItem to be removed.
      */
-    void removeTodoItem(TodoItem t){
+    void removeTodoItem(int id){
+        TodoItem t = getTodoItem(id);
         todoList.remove(t);
         updateSP();
     }
@@ -99,9 +107,42 @@ class TodoItemsManager {
     }
 
     /**
-     * todo
+     * Marks a TodoItem as undone
+     * @param id the id of the TodoItem to be marked as done
      */
-    void updateTodoList(){
+    void markTodoItemAsDone(int id){
+        TodoItem t = getTodoItem(id);
+        t.markAsDone();
+        updateTodoItem(t);
+    }
+
+    /**
+     * Changes th description of a TodoItem
+     * @param id the id of the TodoItem to be edited
+     * @param description the new description
+     */
+    void setTodoItemsDescription(int id, String description){
+        TodoItem t = getTodoItem(id);
+        t.setDescription(description);
+        updateTodoItem(t);
+    }
+
+    /**
+     * Marks a TodoItem as undone
+     * @param id the id of the TodoItem to be marked as undone
+     */
+    void markTodoItemAsUndone(int id){
+        TodoItem t = getTodoItem(id);
+        t.markUndone();
+        updateTodoItem(t);
+    }
+
+    /**
+     * updates t's editTimeStamp and updates the SP
+     * @param t the TodoItm to be updated
+     */
+    private void updateTodoItem(TodoItem t){
+        t.setEditTimestamp();
         updateSP();
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////

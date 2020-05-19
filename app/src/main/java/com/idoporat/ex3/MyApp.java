@@ -4,6 +4,8 @@ import android.app.Application;
 
 import java.util.ArrayList;
 
+//todo use "onResume()" callback to re-query the data and refresh your UI!!!!!!!
+
 /** A class inherits Application  */
 public class MyApp extends Application {
 
@@ -30,19 +32,19 @@ public class MyApp extends Application {
     //////////////////////////////////////// setters ///////////////////////////////////////////////
 
     /**
-     * Instructs the app's TodoManager instance to add t to its' todoList.
-     * @param t the TodoItem to be added
+     * Instructs the app's TodoManager instance to add t to its' todoList
+     * @param description the description of the new TodoItem
      */
-    public void addTodoItem(TodoItem t){
-        todoManager.addTodoItem(t);
+    public void addTodoItem(String description){//TodoItem t){
+        todoManager.addTodoItem(description);
     }
 
     /**
      * Instructs the app's TodoManager instance to remove t to its' todoList.
-     * @param t the TodoItem to be removed.
+     * @param id the id of the TodoItem to be removed.
      */
-    public void removeTodoItem(TodoItem t){
-        todoManager.removeTodoItem(t);
+    public void removeTodoItem(int id){
+        todoManager.removeTodoItem(id);
     }
 
     /**

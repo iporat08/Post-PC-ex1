@@ -1,12 +1,17 @@
 <resources>
     <string name="app_name">TodoBoom</string>
     <string name="button_text">Create</string>
+    <string name="deletion_button_text">Mark as done</string>
     <string name="initial_input_string">""</string>
     <string name="no_todo">"No todod message yet"</string>
     <string name="empty_todo_message">"You can't create an empty todo!"</string>
+    <string name="description_changed">"Changes applied successfully!"</string>
     <string name="done_message">"TODO" userMessage "is now DONE. BOOM!"</string>
     <string name="created_on">Created on: %1$s .</string>
-    <string name="last_modified">Last modified: %1$s .</string>
+    <string name="last_modified">Last modified: %1$s</string>
+    <string name="content_message"> Todo content: %1$s</string>
+    <string name="undo"> Mark as undone</string>
+    <string name="delete"> Delete</string>
 
 
 </resources>
