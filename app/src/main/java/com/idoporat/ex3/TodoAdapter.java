@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * An adapter class
  */
-public class getTodoAdapter extends RecyclerView.Adapter {
+public class TodoAdapter extends RecyclerView.Adapter {
 
     ///////////////////////////////////// data members /////////////////////////////////////////////
     /** An arrayList of TodoItems, holds the tasks to be done (and those who were already done)**/
@@ -28,7 +28,7 @@ public class getTodoAdapter extends RecyclerView.Adapter {
      * Constructor
      * @param todoList An arrayList of TodoItems, holds the tasks to be done (and those already done)
      */
-    getTodoAdapter(ArrayList<TodoItem> todoList){
+    TodoAdapter(ArrayList<TodoItem> todoList){
         this.todoList = todoList;
     }
 
@@ -80,6 +80,14 @@ public class getTodoAdapter extends RecyclerView.Adapter {
                 if(todoClickListener != null){
                     todoClickListener.onTodoClick(todoItem);
                 }
+            }
+        });
+
+        h.itemView.setOnLongClickListener(new View.OnLongClickListener(){
+            @Override
+            public boolean onLongClick(View v) {
+                //in the main screen, nothing will happen if the user long-presses a TodoItem
+                return true;
             }
         });
     }

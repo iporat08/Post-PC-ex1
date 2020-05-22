@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<TodoItem> todoList = new ArrayList<TodoItem>();
 
     /** The MainActivity's Adapter **/
-    private getTodoAdapter adapter;
+    private TodoAdapter adapter;
 
     /** The MainActivity's LayoutManager **/
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -75,6 +74,12 @@ public class MainActivity extends AppCompatActivity {
                 unfinishedTodoIntent.putExtra("id", t.getId());
                 startActivity(unfinishedTodoIntent);
             }
+        }
+
+        @Override
+        public void onTodoLongClick(TodoItem t) {
+            int a = 1;
+            return;
         }
     }
 

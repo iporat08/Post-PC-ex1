@@ -45,7 +45,7 @@ class TodoItemsManager {
 
     private CollectionReference todoRef;
 
-    private getTodoAdapter adapter;
+    private TodoAdapter adapter;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
@@ -55,7 +55,7 @@ class TodoItemsManager {
     TodoItemsManager(Context context){
         db = FirebaseFirestore.getInstance();
         todoRef = db.collection(TODO_COLLECTION);
-        adapter = new getTodoAdapter(todoList);
+        adapter = new TodoAdapter(todoList);
     }
 
     public void updateData(){
@@ -98,7 +98,7 @@ class TodoItemsManager {
         return null;
     }
 
-    public getTodoAdapter getAdapter(){
+    public TodoAdapter getAdapter(){
         return adapter;
     }
 

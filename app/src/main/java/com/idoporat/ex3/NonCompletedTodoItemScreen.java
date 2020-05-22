@@ -42,8 +42,8 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
         String id = callingIntent.getStringExtra(ID);
         final MyApp app = (MyApp)getApplicationContext();
         t = app.getTodoItem(id);
-        if(t != null){ //todo
-            SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+        if(t != null){
+            SimpleDateFormat formatter= new SimpleDateFormat("dd-MM-yyy 'at' HH:mm:ss");
             createdOn.setText(getString(R.string.created_on, formatter.format(t.getCreationTimestamp())));
             String new_edit_timestamp = formatter.format(t.getEditTimestamp());
             lastModified.setText(getString(R.string.last_modified, new_edit_timestamp));
@@ -56,19 +56,27 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
                 if(t != null){
                     final Context context = NonCompletedTodoItemScreen.this;
                     String description = contentEditor.getText().toString();
-                    app.todoManager.setTodoItemsDescription(t.getId(), description, context);
-                    int duration =  Snackbar.LENGTH_SHORT;
-                    Snackbar.make(findViewById(R.id.created_on),
-                            getString(R.string.description_changed), duration).show();
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            String description = contentEditor.getText().toString();
-                            app.todoManager.setTodoItemsDescription(t.getId(), description, context);
-                            finish();
-                        }
-                    }, 2000);
+                    if(description.toString().equals("")){
+                        int duration =  Snackbar.LENGTH_SHORT;
+                        String emptyTodoMessage = getString(R.string.empty_todo_message);
+                        Snackbar.make(v, emptyTodoMessage, duration).show();
+                    }
+                    else{
+                        app.todoManager.setTodoItemsDescription(t.getId(), description, context);
+                        int duration =  Snackbar.LENGTH_SHORT;
+                        Snackbar.make(findViewById(R.id.created_on),
+                                getString(R.string.description_changed), duration).show();
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                String description = contentEditor.getText().toString();
+                                app.todoManager.setTodoItemsDescription(t.getId(), description, context);
+                                finish();
+                            }
+                        }, 2000);
+                    }
+
 
                 }
 
