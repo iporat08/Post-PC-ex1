@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 
-public class NonCompletedTodoItemScreen extends AppCompatActivity {
+public class UncompletedTodoItemActivity extends AppCompatActivity {
 
     /** the non-completed TodoItem **/
     private TodoItem t;
@@ -25,7 +25,6 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
     private EditText contentEditor;
 
     final static String ID = "id";
-    final static int INVALID_ID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(t != null){
-                    final Context context = NonCompletedTodoItemScreen.this;
+                    final Context context = UncompletedTodoItemActivity.this;
                     String description = contentEditor.getText().toString();
                     if(description.toString().equals("")){
                         int duration =  Snackbar.LENGTH_SHORT;
@@ -76,10 +75,7 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
                             }
                         }, 2000);
                     }
-
-
                 }
-
             }
         });
 
@@ -87,11 +83,10 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(t != null){
-                   Context context = NonCompletedTodoItemScreen.this;
+                   Context context = UncompletedTodoItemActivity.this;
                    app.todoManager.markTodoItemAsDone(t.getId(), context);
                 }
                 finish();
-                //todo - add animation
             }
         });
     }

@@ -36,15 +36,12 @@ public class TodoItem {
         isDone = false;
         creationTimestamp = new Date(System.currentTimeMillis());
         editTimestamp = creationTimestamp;
-//        this.id = id;
     }
 
     /**
-     * Todo
+     * An empty constructor, needed for FireStore
      */
-    TodoItem(){
-
-    }
+    TodoItem(){}
 
     /**
      * A constructor from Parcel
@@ -59,35 +56,6 @@ public class TodoItem {
         editTimestamp = new Date(source.readLong());
 
     }
-
-    //////////////////////////////// Parcelable interface methods //////////////////////////////////
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @RequiresApi(api = Build.VERSION_CODES.Q)
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(description);
-//        dest.writeBoolean(isDone);
-//        dest.writeString(id);
-//        dest.writeLong(creationTimestamp.getTime());
-//        dest.writeLong(editTimestamp.getTime());
-//    }
-//
-//    public static final Parcelable.Creator<TodoItem> CREATOR = new Parcelable.Creator<TodoItem>(){
-//        @RequiresApi(api = Build.VERSION_CODES.Q)
-//        @Override
-//        public TodoItem createFromParcel(Parcel source) {
-//            return new TodoItem(source);
-//        }
-//
-//        @Override
-//        public TodoItem[] newArray(int size) {
-//            return new TodoItem[size];
-//        }
-//    };
 
     ///////////////////////////////////// getters //////////////////////////////////////////////////
     /**
@@ -128,21 +96,11 @@ public class TodoItem {
 
     ///////////////////////////////////// setters //////////////////////////////////////////////////
     /**
-     * Sets the TodoItem's isDone field to true.
+     * Sets isDone
+     * @param isDone the new isDone value
      */
-    void markAsDone(){
-        isDone = true;
-    }
-
     public void setIsDone(boolean isDone){
         this.isDone = isDone;
-    }
-
-    /**
-     * Sets the TodoItem's isDone field to false.
-     */
-    void markUndone(){
-        isDone = false;
     }
 
     /**
@@ -153,6 +111,10 @@ public class TodoItem {
         description = s;
     }
 
+    /**
+     * Sets the TodoItem's id
+     * @param id the new id
+     */
     void setId(String id){
         this.id = id;
     }
@@ -164,6 +126,10 @@ public class TodoItem {
         editTimestamp = new Date(System.currentTimeMillis());
     }
 
+    /**
+     * sets creationTimeStamp
+     * @param d the new creationTimeStamp
+     */
     public void setCreationTimestamp(Date d){
         creationTimestamp = d;
     }

@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     /** The Application running this activity **/
     private MyApp app;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         app = (MyApp) getApplicationContext();
         todoList = app.todoManager.getTodoList();
         adapter = app.todoManager.getAdapter();
-//        adapter.setTodoItems(app.todoManager.getAdapter());
         RecyclerView todoRecycler = findViewById(R.id.todo_recycler);
         todoRecycler.setAdapter(adapter);
         todoRecycler.setLayoutManager(layoutManager);
@@ -64,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
         public void onTodoClick(TodoItem t) {
             if (t.getIsDone()) {
                 Intent finishedTodoIntent = new Intent(getApplicationContext(),
-                        CompletedTodoActivity.class); // todo
+                        CompletedTodoItemActivity.class); // todo
                 finishedTodoIntent.putExtra("id", t.getId());
                 startActivity(finishedTodoIntent);
             }
             else{
                 Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
-                                                            NonCompletedTodoItemScreen.class); // todo
+                                                            UncompletedTodoItemActivity.class); // todo
                 unfinishedTodoIntent.putExtra("id", t.getId());
                 startActivity(unfinishedTodoIntent);
             }
@@ -78,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onTodoLongClick(TodoItem t) {
-            int a = 1;
             return;
         }
     }
@@ -108,21 +105,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         app.todoManager.updateData();
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("inputMessage", inputMessage);
-//        outState.putParcelableArrayList("todoList", todoList); // todo will not survive this way
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         inputMessage = savedInstanceState.getString("inputMessage");
-//        todoList = savedInstanceState.getParcelableArrayList("todoList");
-        adapter.setTodoItems(todoList);
     }
 }

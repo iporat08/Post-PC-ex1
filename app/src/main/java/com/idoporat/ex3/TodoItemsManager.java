@@ -40,9 +40,10 @@ class TodoItemsManager {
     /** A SharedPreferences object of the class **/
     private static SharedPreferences sp;
 
-
+    /** a connection to FireStore **/
     private FirebaseFirestore db;
 
+    /** a reference to the todoCollection **/
     private CollectionReference todoRef;
 
     private TodoAdapter adapter;
@@ -86,18 +87,23 @@ class TodoItemsManager {
         return todoList;
     }
 
+    /**
+     * Returns the TodoItem with id id from the todoList
+     * @param id the id to be found
+     * @returnthe TodoItem with id id from the todoList
+     */
     TodoItem getTodoItem(String id){
-        //todo
-        for(TodoItem t : todoList){ //todo - temp, should change after firebase
-            if(t.getId() != null) {
-                if (t.getId().equals(id)) {
-                    return t;
-                }
+        for(TodoItem t : todoList){
+            if (t.getId().equals(id)) {
+                return t;
             }
         }
         return null;
     }
 
+    /**
+     * @return adapter
+     */
     public TodoAdapter getAdapter(){
         return adapter;
     }
@@ -119,7 +125,7 @@ class TodoItemsManager {
                     public void onSuccess(DocumentReference documentReference) {
                         String id = documentReference.getId();
                         t.setId(id);
-                        todoList.add(t); // todo
+                        todoList.add(t);
                         todoRef.document(id).set(t, SetOptions.merge());
                         adapter.notifyDataSetChanged();
                     }
@@ -156,7 +162,7 @@ class TodoItemsManager {
      */
     void markTodoItemAsDone(String id, Context context){
         TodoItem t = getTodoItem(id);
-        t.markAsDone();
+        t.setIsDone(true);
         updateTodoItem(t, context);
     }
 
@@ -177,7 +183,7 @@ class TodoItemsManager {
      */
     void markTodoItemAsUndone(String id, Context context){
         TodoItem t = getTodoItem(id);
-        t.markUndone();
+        t.setIsDone(false);
         updateTodoItem(t, context);
     }
 

@@ -5,7 +5,7 @@
     android:id="@+id/non_completed_activity_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.idoporat.ex3.NonCompletedTodoItemScreen">
+    tools:context="com.idoporat.ex3.UncompletedTodoItemActivity">
 
     <TextView
         android:id="@+id/created_on"

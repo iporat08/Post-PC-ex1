@@ -11,9 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-
-public class CompletedTodoActivity extends AppCompatActivity {
+public class CompletedTodoItemActivity extends AppCompatActivity {
 
     /** the completed TodoItem **/
     private TodoItem t;
@@ -29,7 +27,6 @@ public class CompletedTodoActivity extends AppCompatActivity {
     private MyApp app;
 
     final static String ID = "id";
-    final static String INVALID_ID = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +42,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
         String id = callingIntent.getStringExtra(ID);
         app = (MyApp)getApplicationContext();
         t = app.getTodoItem(id);
-        if(t != null){ //todo
+        if(t != null){
             String s = getString(R.string.content_message, t.getDescription());
             content.setText(s);
         }
@@ -57,7 +54,6 @@ public class CompletedTodoActivity extends AppCompatActivity {
                     AlertDialog alert = createTodoDialog(t);
                     dialogOn = true;
                     alert.show();
-                    //todo - needs to add a notification here instead of MainActivity!
                 }
             }
         });
@@ -70,7 +66,6 @@ public class CompletedTodoActivity extends AppCompatActivity {
                 }
                 setResult(RESULT_OK, new Intent());
                 finish();
-                //todo - add animation
             }
         });
     }
@@ -83,12 +78,12 @@ public class CompletedTodoActivity extends AppCompatActivity {
     private AlertDialog createTodoDialog(TodoItem t){
         wasLongClicked = t;
         final TodoItem tTag = t;
-        AlertDialog.Builder builder = new AlertDialog.Builder(CompletedTodoActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CompletedTodoItemActivity.this);
         builder.setMessage("Are You Sure to delete?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        app.todoManager.removeTodoItem(tTag.getId());
+                        app.removeTodoItem(tTag.getId());
                         wasLongClicked = null;
                         dialogOn = false;
                         Intent intentBack = new Intent();

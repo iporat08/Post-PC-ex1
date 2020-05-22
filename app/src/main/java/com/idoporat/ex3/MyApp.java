@@ -19,10 +19,8 @@ public class MyApp extends Application {
         super.onCreate();
 
         todoManager = new TodoItemsManager(this);
-        int len = todoManager.getTodoList().size();
-        android.util.Log.i("MyApp", SIZE_MESSAGE_PREFIX + len);
     }
-    //////////////////////////////////////// setters ///////////////////////////////////////////////
+    //////////////////////////////////////// getters ///////////////////////////////////////////////
     public TodoItem getTodoItem(String id){
         return todoManager.getTodoItem(id);
     }
@@ -45,12 +43,5 @@ public class MyApp extends Application {
         todoManager.removeTodoItem(id);
     }
 
-    /**
-     * Instructs the app's TodoManager instance to replace its' todoList with list.
-     * @param list the new todoList.
-     */
-    public void setTodoList(ArrayList<TodoItem> list){
-        todoManager.setTodoList(list);
-    }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }
