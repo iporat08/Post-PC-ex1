@@ -29,7 +29,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
     private MyApp app;
 
     final static String ID = "id";
-    final static int INVALID_ID = -1;
+    final static String INVALID_ID = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
         Button deleteButton = (Button)findViewById(R.id.delete_button);
 
         Intent callingIntent = getIntent();
-        int id = callingIntent.getIntExtra(ID, INVALID_ID);
+        String id = callingIntent.getStringExtra(ID);
         app = (MyApp)getApplicationContext();
         t = app.getTodoItem(id);
         if(t != null){ //todo
@@ -66,7 +66,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(t != null){
-                    app.todoManager.markTodoItemAsUndone(t.getId());
+                    app.todoManager.markTodoItemAsUndone(t.getId(), getApplicationContext());
                 }
                 setResult(RESULT_OK, new Intent());
                 finish();
@@ -111,7 +111,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
 
         outState.putBoolean("dialogOn", dialogOn);
-        outState.putParcelable("wasLongClicked", wasLongClicked);
+        outState.putString("wasLongClicked", wasLongClicked.getId());
     }
 
     @Override
@@ -120,7 +120,7 @@ public class CompletedTodoActivity extends AppCompatActivity {
 
         // restoring a dialog box, if one is presented on screen:
         dialogOn = savedInstanceState.getBoolean("dialogOn");
-        wasLongClicked = savedInstanceState.getParcelable("wasLongClicked");
+        wasLongClicked = app.todoManager.getTodoItem(savedInstanceState.getString("wasLongClicked"));
         if(dialogOn){
             AlertDialog alert = createTodoDialog(wasLongClicked);
             alert.show();

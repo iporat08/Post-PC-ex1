@@ -1,11 +1,12 @@
 package com.idoporat.ex3;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,12 +39,12 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
         contentEditor = (EditText)findViewById(R.id.content_editor);
 
         Intent callingIntent = getIntent();
-        int id = callingIntent.getIntExtra(ID, INVALID_ID);
+        String id = callingIntent.getStringExtra(ID);
         final MyApp app = (MyApp)getApplicationContext();
         t = app.getTodoItem(id);
         if(t != null){ //todo
             SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
-            createdOn.setText(getString(R.string.created_on, formatter.format(t.getCreationTime())));
+            createdOn.setText(getString(R.string.created_on, formatter.format(t.getCreationTimestamp())));
             String new_edit_timestamp = formatter.format(t.getEditTimestamp());
             lastModified.setText(getString(R.string.last_modified, new_edit_timestamp));
             contentEditor.setText(t.getDescription());
@@ -53,14 +54,24 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(t != null){
+                    final Context context = NonCompletedTodoItemScreen.this;
                     String description = contentEditor.getText().toString();
-                    app.todoManager.setTodoItemsDescription(t.getId(), description);
-                    //todo - needs to add a notification here instead of MainActivity!
+                    app.todoManager.setTodoItemsDescription(t.getId(), description, context);
+                    int duration =  Snackbar.LENGTH_SHORT;
+                    Snackbar.make(findViewById(R.id.created_on),
+                            getString(R.string.description_changed), duration).show();
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            String description = contentEditor.getText().toString();
+                            app.todoManager.setTodoItemsDescription(t.getId(), description, context);
+                            finish();
+                        }
+                    }, 2000);
+
                 }
-                Intent intentBack = new Intent();
-                intentBack.putExtra("text", contentEditor.getText().toString());
-                setResult(RESULT_OK, intentBack);
-                finish();
+
             }
         });
 
@@ -68,9 +79,9 @@ public class NonCompletedTodoItemScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(t != null){
-                   app.todoManager.markTodoItemAsDone(t.getId());
+                   Context context = NonCompletedTodoItemScreen.this;
+                   app.todoManager.markTodoItemAsDone(t.getId(), context);
                 }
-                setResult(RESULT_OK, new Intent());
                 finish();
                 //todo - add animation
             }

@@ -1,14 +1,13 @@
 package com.idoporat.ex3;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<TodoItem> todoList = new ArrayList<TodoItem>();
 
     /** The MainActivity's Adapter **/
-    private TodoAdapter adapter = new TodoAdapter(todoList);
+    private getTodoAdapter adapter;
 
     /** The MainActivity's LayoutManager **/
     private RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -36,11 +35,6 @@ public class MainActivity extends AppCompatActivity {
     /** The Application running this activity **/
     private MyApp app;
 
-    /** the id of a NonCompletedActivity's startActivityForResult call **/
-    final static int nonCompletedActivity = 1;
-
-    /** the id of a CompletedActivity's startActivityForResult call **/
-    final static int completedActivity = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
         app = (MyApp) getApplicationContext();
         todoList = app.todoManager.getTodoList();
-        adapter.setTodoItems(todoList);
+        adapter = app.todoManager.getAdapter();
+//        adapter.setTodoItems(app.todoManager.getAdapter());
         RecyclerView todoRecycler = findViewById(R.id.todo_recycler);
         todoRecycler.setAdapter(adapter);
         todoRecycler.setLayoutManager(layoutManager);
@@ -68,34 +63,17 @@ public class MainActivity extends AppCompatActivity {
     class TodoClickListener implements com.idoporat.ex3.TodoClickListener {
         @Override
         public void onTodoClick(TodoItem t) {
-            if (t.isDone()) {
-                Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
+            if (t.getIsDone()) {
+                Intent finishedTodoIntent = new Intent(getApplicationContext(),
                         CompletedTodoActivity.class); // todo
-                unfinishedTodoIntent.putExtra("id", t.getId());
-                startActivityForResult(unfinishedTodoIntent, completedActivity);
+                finishedTodoIntent.putExtra("id", t.getId());
+                startActivity(finishedTodoIntent);
             }
             else{
                 Intent unfinishedTodoIntent = new Intent(getApplicationContext(),
                                                             NonCompletedTodoItemScreen.class); // todo
                 unfinishedTodoIntent.putExtra("id", t.getId());
-                startActivityForResult(unfinishedTodoIntent, nonCompletedActivity);
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestedCode, int resultCode, Intent data){
-        super.onActivityResult(requestedCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            if(requestedCode == nonCompletedActivity){
-                adapter.notifyDataSetChanged();
-                int duration =  Snackbar.LENGTH_LONG; // todo needs to be in NonCompletedActivity!
-                Snackbar.make(findViewById(R.id.textInput),
-                        getString(R.string.description_changed), duration).show();
-            }
-            if (requestedCode == completedActivity){
-                adapter.notifyDataSetChanged();
-                //todo - add animation
+                startActivity(unfinishedTodoIntent);
             }
         }
     }
@@ -122,17 +100,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        app.todoManager.updateData();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("inputMessage", inputMessage);
-        outState.putParcelableArrayList("todoList", todoList);
+//        outState.putParcelableArrayList("todoList", todoList); // todo will not survive this way
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         inputMessage = savedInstanceState.getString("inputMessage");
-        todoList = savedInstanceState.getParcelableArrayList("todoList");
+//        todoList = savedInstanceState.getParcelableArrayList("todoList");
         adapter.setTodoItems(todoList);
     }
 }

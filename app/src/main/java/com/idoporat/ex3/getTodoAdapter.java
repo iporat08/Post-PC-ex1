@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * An adapter class
  */
-public class TodoAdapter extends RecyclerView.Adapter {
+public class getTodoAdapter extends RecyclerView.Adapter {
 
     ///////////////////////////////////// data members /////////////////////////////////////////////
     /** An arrayList of TodoItems, holds the tasks to be done (and those who were already done)**/
@@ -28,7 +28,7 @@ public class TodoAdapter extends RecyclerView.Adapter {
      * Constructor
      * @param todoList An arrayList of TodoItems, holds the tasks to be done (and those already done)
      */
-    TodoAdapter(ArrayList<TodoItem> todoList){
+    getTodoAdapter(ArrayList<TodoItem> todoList){
         this.todoList = todoList;
     }
 
@@ -66,7 +66,7 @@ public class TodoAdapter extends RecyclerView.Adapter {
         final TodoItemHolder h = (TodoItemHolder) holder;
         final TodoItem todoItem= todoList.get(position);
 
-        if(todoItem.isDone()){
+        if(todoItem.getIsDone()){
             h.deleteText();
         }
         else{
@@ -86,7 +86,10 @@ public class TodoAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return todoList.size();
+        if(todoList != null ){
+            return todoList.size();
+        }
+        return 0;
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
 }
